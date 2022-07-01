@@ -20,20 +20,20 @@ db.init_app(app)
 CORS(app)
 setup_admin(app)
 
-class Starwars:
-    all_starwars = []
+# class Starwars:
+#     all_starwars = []
 
-    def __init__(self, content):
-        self.id = len(self.__class__.all_starwars) + 1
-        self.content = content
-        self.date = datetime.utcnow
-        self.__class__.all_starwars.append(self)
+#     def __init__(self, content):
+#         self.id = len(self.__class__.all_starwars) + 1
+#         self.content = content
+#         self.date = datetime.utcnow
+#         self.__class__.all_starwars.append(self)
 
-    def serialize(self):
-        return {
-            "id": self.id,
-            "content": self.content,
-        }
+#     def serialize(self):
+#         return {
+#             "id": self.id,
+#             "content": self.content,
+#         }
 
 # Handle/serialize errors like a JSON object
 @app.errorhandler(APIException)
@@ -76,6 +76,14 @@ def planets():
     }
 
     return jsonify(response_body), 200
+
+# @app.route('/planets/<int:id>', methods=['GET'])
+# def people():
+#     response_body = {
+#         "msg": "Hello, people, "
+#     }
+
+#     return jsonify(response_body), 200
 
 
 
