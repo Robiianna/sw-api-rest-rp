@@ -20,6 +20,21 @@ db.init_app(app)
 CORS(app)
 setup_admin(app)
 
+class Starwars:
+    all_starwars = []
+
+    def __init__(self, content):
+        self.id = len(self.__class__.all_starwars) + 1
+        self.content = content
+        self.date = datetime.utcnow
+        self.__class__.all_starwars.append(self)
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "content": self.content,
+        }
+
 # Handle/serialize errors like a JSON object
 @app.errorhandler(APIException)
 def handle_invalid_usage(error):
@@ -31,13 +46,38 @@ def sitemap():
     return generate_sitemap(app)
 
 @app.route('/user', methods=['GET'])
-def handle_hello():
-
+def user():
     response_body = {
-        "msg": "Hello, this is your GET /user response "
+        "mensaje": "hola usuario"
     }
 
     return jsonify(response_body), 200
+
+@app.route('/people', methods=['GET'])
+def people():
+    response_body = {
+        "inicio": "hola people"
+    }
+
+    return jsonify(response_body), 200
+
+# @app.route('/people/<int:id>', methods=['GET'])
+# def people():
+#     response_body = {
+#         "msg": "Hello, people, "
+#     }
+
+#     return jsonify(response_body), 200
+
+@app.route('/planets', methods=['GET'])
+def planets():
+    response_body = {
+        "mensaje": "hola planetas"
+    }
+
+    return jsonify(response_body), 200
+
+
 
 # this only runs if `$ python src/main.py` is executed
 if __name__ == '__main__':
