@@ -53,7 +53,7 @@ def user():
 
     return jsonify(response_body), 200
 
-@app.route('/people', methods=['GET'])
+@app.route('/characters', methods=['GET'])
 def people():
     response_body = {
         "inicio": "hola people"
