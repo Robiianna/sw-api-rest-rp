@@ -34,6 +34,16 @@ class Character(db.Model):
     gender = db.Column(db.String(250))
     eye_color = db.Column(db.String(250))
 
+    def serialize(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "birth_year": self.birth_year,
+            "films": self.films,
+            "gender": self.gender,
+            "eye_color": self.eye_color
+        }
+
 class Planet(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100))
@@ -41,6 +51,16 @@ class Planet(db.Model):
     diameter = db.Column(db.Integer)
     population = db.Column(db.Integer)
     terrain = db.Column(db.Integer)
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "climate": self.climate,
+            "diameter": self.diameter,
+            "population": self.population,
+            "terrain": self.terrain
+        }
 
 
 class Favorite_Planet(db.Model): 
