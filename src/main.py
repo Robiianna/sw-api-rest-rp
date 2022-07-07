@@ -8,7 +8,7 @@ from flask_swagger import swagger
 from flask_cors import CORS
 from utils import APIException, generate_sitemap
 from admin import setup_admin
-from models import db, User, Character, Planet
+from models import db, User, Character, Planet, FavoriteCharacter, FavoritePlanet
 #from models import Person
 
 app = Flask(__name__)
@@ -46,12 +46,19 @@ def sitemap():
     return generate_sitemap(app)
 
 @app.route('/user', methods=['GET'])
-def user():
-    response_body = {
-        "mensaje": "hola usuario"
-    }
+def list_user():
+    users = User.query.all()
+    user_map = list(map(
+        lambda user: user.serialize(),
+        users
+    ))
+    return jsonify(user_map), 200
 
-    return jsonify(response_body), 200
+@app.route('/user/<int:user_id>', methods=['GET'])
+def user_unique(user_id):
+    user = User.query.filter_by(id=character_id).one_or_none()  
+    
+    return jsonify(user.serialize()), 200
 
 @app.route('/characters', methods=['GET'])
 def list_character():
@@ -84,6 +91,44 @@ def planet_unique(planet_id):
     planet = Planet.query.filter_by(id=planet_id).one_or_none()  
     
     return jsonify(planet.serialize()), 200
+
+@app.route('/favorites', methods=['GET'])
+def favorites():
+    favorites1 = FavoriteCharacter.query.all()
+    favorites2 = FavoritePlanet.query.all()
+    favorites2_map = list(map(
+        lambda favorite2: favorite2.serialize(),
+        favorites2
+    ))
+    favorites1_map = list(map(
+        lambda favorite1: favorite1.serialize(),
+        favorites1
+    ))
+    favorites_map = favorites1_map + favorites2_map
+
+    return jsonify(favorites_map), 200
+
+@app.route('/favorites/planets', methods=['GET'])
+def favorite_planet():
+    favorites_planet = FavoritePlanet.query.all()
+    favorites_panets_map = list(map(
+        lambda favorite: favorite.serialize(),
+        favorites_planet
+    ))
+
+    return jsonify(favorites_panets_map), 200
+
+@app.route('/favorites/characters', methods=['GET'])
+def favorite_character():
+    favorites_character = FavoriteCharacter.query.all()
+    favorites_characters_map = list(map(
+        lambda favorite: favorite.serialize(),
+        favorites_character
+    ))
+
+    return jsonify(favorites_characters_map), 200
+    
+    
 
 # this only runs if `$ python src/main.py` is executed
 if __name__ == '__main__':
