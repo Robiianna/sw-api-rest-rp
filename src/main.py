@@ -123,7 +123,9 @@ def favorite_planet():
             user_id = body["user_id"] if "user_id" in body else None, 
             planet_id = body["planet_id"] if "planet_id" in body else None
         )
-        return jsonify(favorite), 200
+        db.session.add(favorite)
+        db.session.commit()
+        return jsonify(favorite.serialize()), 201
 
 
 @app.route('/favorites/characters', methods=['GET', 'POST'])
@@ -141,7 +143,9 @@ def favorite_character():
             user_id = body["user_id"] if "user_id" in body else None, 
             character_id = body["character_id"] if "character_id" in body else None
         )
-        return jsonify(favorite), 200
+        db.session.add(favorite)
+        db.session.commit()
+        return jsonify(favorite.serialize()), 201
     
 
 @app.route('/favorites/characters/<int:favoritecharacter_id>', methods=['GET', 'DELETE'])
