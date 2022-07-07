@@ -154,9 +154,9 @@ def favoriteCharacter(favoritecharacter_id):
     if request.method == "GET":
         return jsonify(favorites_character.serialize()), 200
     else:
-        deleted = FavoriteCharacter.delete()
+        deleted = favorites_character.delete()
         if deleted == False: return jsonify("algo salio mal"), 500 
-        return "", 202
+        return "", 204
 
 @app.route('/favorites/planets/<int:favoriteplanet_id>', methods=['GET', 'DELETE'])
 def favoritePlanet(favoriteplanet_id):
@@ -164,9 +164,9 @@ def favoritePlanet(favoriteplanet_id):
     if request.method == "GET":
         return jsonify(favorites_planet.serialize()), 200
     else:
-        deleted = FavoritePlanet.delete()
+        deleted = favorites_planet.delete()
         if deleted == False: return jsonify("algo salio mal"), 500 
-        return "", 202
+        return "", 204
 
 
 # this only runs if `$ python src/main.py` is executed
