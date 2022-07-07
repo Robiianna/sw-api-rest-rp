@@ -102,6 +102,15 @@ class FavoritePlanet(db.Model):
 
         db.session.add(self)
         db.session.commit()
+    
+    def delete(self):
+        db.session.delete(self)
+        try:
+            db.session.commit()
+            return True
+        except Exception as error:
+            print(error.args)
+            return False
 
     def serialize(self):
         return {
@@ -124,6 +133,15 @@ class FavoriteCharacter(db.Model):
 
         db.session.add(self)
         db.session.commit()
+
+    def delete(self):
+        db.session.delete(self)
+        try:
+            db.session.commit()
+            return True
+        except Exception as error:
+            print(error.args)
+            return False
 
     def serialize(self):
         return {

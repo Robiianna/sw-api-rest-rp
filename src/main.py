@@ -108,27 +108,62 @@ def favorites():
 
     return jsonify(favorites_map), 200
 
-@app.route('/favorites/planets', methods=['GET'])
+@app.route('/favorites/planets', methods=['GET', 'POST'])
 def favorite_planet():
-    favorites_planet = FavoritePlanet.query.all()
-    favorites_panets_map = list(map(
-        lambda favorite: favorite.serialize(),
-        favorites_planet
-    ))
+    if request.method == "GET":
+        favorites_planet = FavoritePlanet.query.all()
+        favorites_panets_map = list(map(
+            lambda favorite: favorite.serialize(),
+            favorites_planet
+        ))
+        return jsonify(favorites_panets_map), 200
+    else:
+        body = request.json
+        favorite = FavoritePlanet(
+            user_id = body["user_id"] if "user_id" in body else None, 
+            planet_id = body["planet_id"] if "planet_id" in body else None
+        )
+        return jsonify(favorite), 200
 
-    return jsonify(favorites_panets_map), 200
 
-@app.route('/favorites/characters', methods=['GET'])
+@app.route('/favorites/characters', methods=['GET', 'POST'])
 def favorite_character():
-    favorites_character = FavoriteCharacter.query.all()
-    favorites_characters_map = list(map(
-        lambda favorite: favorite.serialize(),
-        favorites_character
-    ))
+    if request.method == "GET":
+        favorites_character = FavoriteCharacter.query.all()
+        favorites_characters_map = list(map(
+            lambda favorite: favorite.serialize(),
+            favorites_character
+        ))
+        return jsonify(favorites_characters_map), 200
+    else:
+        body = request.json
+        favorite = FavoriteCharacter(
+            user_id = body["user_id"] if "user_id" in body else None, 
+            character_id = body["character_id"] if "character_id" in body else None
+        )
+        return jsonify(favorite), 200
+    
 
-    return jsonify(favorites_characters_map), 200
-    
-    
+@app.route('/favorites/characters/<int:favoritecharacter_id>', methods=['GET', 'DELETE'])
+def favoriteCharacter(favoritecharacter_id):
+    favorites_character = FavoriteCharacter.query.filter_by(id=favoritecharacter_id).one_or_none() 
+    if request.method == "GET":
+        return jsonify(favorites_character.serialize()), 200
+    else:
+        deleted = FavoriteCharacter.delete()
+        if deleted == False: return jsonify("algo salio mal"), 500 
+        return "", 202
+
+@app.route('/favorites/planets/<int:favoriteplanet_id>', methods=['GET', 'DELETE'])
+def favoritePlanet(favoriteplanet_id):
+    favorites_planet = FavoritePlanet.query.filter_by(id=favoriteplanet_id).one_or_none() 
+    if request.method == "GET":
+        return jsonify(favorites_planet.serialize()), 200
+    else:
+        deleted = FavoritePlanet.delete()
+        if deleted == False: return jsonify("algo salio mal"), 500 
+        return "", 202
+
 
 # this only runs if `$ python src/main.py` is executed
 if __name__ == '__main__':
