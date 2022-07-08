@@ -21,7 +21,7 @@ def upgrade():
     op.create_table('character',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('name', sa.String(length=250), nullable=True),
-    sa.Column('birth_year', sa.Integer(), nullable=True),
+    sa.Column('birth_year', sa.String(length=40), nullable=True),
     sa.Column('films', sa.String(length=250), nullable=True),
     sa.Column('gender', sa.String(length=250), nullable=True),
     sa.Column('eye_color', sa.String(length=250), nullable=True),

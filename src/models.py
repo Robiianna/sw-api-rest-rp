@@ -32,7 +32,7 @@ class User(db.Model):
 class Character(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(250))
-    birth_year = db.Column(db.Integer)
+    birth_year = db.Column(db.String(40))
     films = db.Column(db.String(250))
     gender = db.Column(db.String(250))
     eye_color = db.Column(db.String(250))

@@ -9,6 +9,7 @@ from flask_cors import CORS
 from utils import APIException, generate_sitemap
 from admin import setup_admin
 from models import db, User, Character, Planet, FavoriteCharacter, FavoritePlanet
+import requests
 #from models import Person
 
 app = Flask(__name__)
@@ -168,6 +169,34 @@ def favoritePlanet(favoriteplanet_id):
         if deleted == False: return jsonify("algo salio mal"), 500 
         return "", 204
 
+@app.route('/llenarbd', methods=['POST'])
+def llenarbd():
+    r_body = request.json
+    response = requests.get(f"https://www.swapi.tech/api/people?page=1&limit={r_body['limit']}")
+    body = response.json()
+    characters = body['results']
+    new=0
+    for character in characters:
+        exist = Character.query.filter_by(name=character['name']).one_or_none()
+        if exist: continue
+        _response = requests.get(f"https://www.swapi.tech/api/people/{character['uid']}")
+        _body = _response.json()
+        properties = _body['result']['properties']
+        _character = Character(
+            name= properties["name"],
+            birth_year= properties["birth_year"], 
+            films= None, 
+            gender = properties["gender"], 
+            eye_color= properties["eye_color"]
+        )
+        new+=1
+        db.session.add(_character)
+    try:
+        db.session.commit()
+        return jsonify(f"added {new} characters"),200
+    except Exception as error:
+        db.session.rollback()
+        return jsonify(f"{error.args}"), 400
 
 # this only runs if `$ python src/main.py` is executed
 if __name__ == '__main__':
